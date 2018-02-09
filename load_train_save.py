@@ -10,13 +10,16 @@ from matplotlib import pyplot as plt
 from sklearn.model_selection import train_test_split
 
 import glob
-bird_locations = glob.glob('/home/patriks/Desktop/bird-plane-orange-web-classiffier/datasets/grayscale_birds/*.jpg')
-plane_locations = glob.glob('/home/patriks/Desktop/bird-plane-orange-web-classiffier/datasets/grayscale_planes/*.jpg')
-orange_locations = glob.glob('/home/patriks/Desktop/bird-plane-orange-web-classiffier/datasets/grayscale_oranges/*.jpg')
+# bird_locations = glob.glob('/home/patriks/Desktop/bird-plane-orange-web-classiffier/datasets/grayscale_birds/*.jpg')
+# plane_locations = glob.glob('/home/patriks/Desktop/bird-plane-orange-web-classiffier/datasets/grayscale_planes/*.jpg')
+# orange_locations = glob.glob('/home/patriks/Desktop/bird-plane-orange-web-classiffier/datasets/grayscale_oranges/*.jpg')
 
-bird_x = np.array([np.array(Image.open(fname)) for fname in bird_locations])
-plane_x = np.array([np.array(Image.open(fname)) for fname in plane_locations])
-orange_x = np.array([np.array(Image.open(fname)) for fname in orange_locations])
+# bird_x = np.array([np.array(Image.open(fname).resize((100,100))) for fname in bird_locations])
+# plane_x = np.array([np.array(Image.open(fname).resize((100,100))) for fname in plane_locations])
+# orange_x = np.array([np.array(Image.open(fname).resize((100,100)) for fname in orange_locations])
+bird_x = utils.load_and_preprocess_images('/home/patriks/Desktop/bird-plane-orange-web-classiffier/datasets/dumped_birds/*.jpg')
+plane_x = utils.load_and_preprocess_images('/home/patriks/Desktop/bird-plane-orange-web-classiffier/datasets/airplanes_raw/*.jpg')
+orange_x = utils.load_and_preprocess_images('/home/patriks/Desktop/bird-plane-orange-web-classiffier/datasets/oranges_raw/*.jpg')
 
 bird_y = np.empty(bird_x.shape[0])
 bird_y.fill(0)

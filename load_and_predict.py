@@ -9,13 +9,20 @@ from PIL import Image
 from sklearn.model_selection import train_test_split
 #-------------------load iamge data for evaluation
 import glob
-bird_locations = glob.glob('/home/patriks/Desktop/bird-plane-orange-web-classiffier/datasets/grayscale_birds/*.jpg')
-plane_locations = glob.glob('/home/patriks/Desktop/bird-plane-orange-web-classiffier/datasets/grayscale_planes/*.jpg')
-orange_locations = glob.glob('/home/patriks/Desktop/bird-plane-orange-web-classiffier/datasets/grayscale_oranges/*.jpg')
+# bird_locations = glob.glob(
+#     '/home/patriks/Desktop/bird-plane-orange-web-classiffier/datasets/grayscale_birds/*.jpg')
+# plane_locations = glob.glob(
+#     '/home/patriks/Desktop/bird-plane-orange-web-classiffier/datasets/grayscale_planes/*.jpg')
+# orange_locations = glob.glob(
+#     '/home/patriks/Desktop/bird-plane-orange-web-classiffier/datasets/grayscale_oranges/*.jpg')
 
-bird_x = np.array([np.array(Image.open(fname)) for fname in bird_locations])
-plane_x = np.array([np.array(Image.open(fname)) for fname in plane_locations])
-orange_x = np.array([np.array(Image.open(fname)) for fname in orange_locations])
+bird_x = utils.load_and_preprocess_images('/home/patriks/Desktop/bird-plane-orange-web-classiffier/datasets/dumped_birds/*.jpg')
+plane_x = utils.load_and_preprocess_images('/home/patriks/Desktop/bird-plane-orange-web-classiffier/datasets/airplanes_raw/*.jpg')
+orange_x = utils.load_and_preprocess_images('/home/patriks/Desktop/bird-plane-orange-web-classiffier/datasets/oranges_raw/*.jpg')
+# bird_x = np.array([np.array(Image.open(fname)) for fname in bird_locations])
+# plane_x = np.array([np.array(Image.open(fname)) for fname in plane_locations])
+# orange_x = np.array([np.array(Image.open(fname))
+                     # for fname in orange_locations])
 
 bird_y = np.empty(bird_x.shape[0])
 bird_y.fill(0)
@@ -27,31 +34,10 @@ orange_y.fill(2)
 x = np.concatenate((bird_x, plane_x, orange_x))
 y = np.concatenate((bird_y, plane_y, orange_y))
 
-# print(x.shape)
-# print(y.shape)
-# utils.showImage(x[100])
-# print(y[100])
-
-# x,y = utils.shuffle_wrt_to_each_other(x,y)
-X_train, X_test, Y_train, Y_test = train_test_split(x, y, test_size=0.30,random_state=42)
-# print(x.shape)
-# print(y.shape)
-# utils.showImage(x[100])
-# print(y[100])
-# print(y[100])
-# Folloing: https://elitedatascience.com/keras-tutorial-deep-learning-in-python
-
-# Mnist dataset here is already prepped for us into training and test sets
-# (X_train, y_train), (X_test, y_test) = mnist.load_data()
-# X_train - 60000 28X28 images
-# y_train - 60000 numerical labels from range (0-9). That's ten label classes.
-
-# x_test - 10000 28X28 images
-# y_test - 10000 numerical labels from range (0-9). That's ten label classes.
-
-# utils.showImage(X_train[0])
+X_train, X_test, Y_train, Y_test = train_test_split(x, y,
+                                                test_size=0.30, random_state=42)
 utils.showImage(X_test[250])
-#Explicitly adding the second parameter (depth)
+
 X_train = X_train.reshape(X_train.shape[0], 100, 100, 1)
 X_test = X_test.reshape(X_test.shape[0], 100, 100, 1)
 #
@@ -68,7 +54,7 @@ X_test /= 255
 
 # Convert our label to one-hot encoding
 # vectors with the correct class having 1 and the rest having 0
-Y_train = np_utils.to_categorical(Y_train,3)
+Y_train = np_utils.to_categorical(Y_train, 3)
 Y_test = np_utils.to_categorical(Y_test, 3)
 #------------------------------------
 # load json and create model
@@ -91,9 +77,10 @@ print("Loaded model from disk")
 # y_test = np_utils.to_categorical(y_test, 3)
 # evaluate loaded model on test data
 # loaded_model.compile(loss='binary_crossentropy', optimizer='rmsprop', metrics=['accuracy'])
-loaded_model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
+loaded_model.compile(loss='categorical_crossentropy',
+                     optimizer='adam', metrics=['accuracy'])
 score = loaded_model.evaluate(X_test, Y_test, verbose=0)
-print("%s: %.2f%%" % (loaded_model.metrics_names[1], score[1]*100))
+print("%s: %.2f%%" % (loaded_model.metrics_names[1], score[1] * 100))
 
 predictions = loaded_model.predict(X_test)
 result = utils.one_hot_to_categorical(predictions[250])

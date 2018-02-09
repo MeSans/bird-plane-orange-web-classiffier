@@ -1,6 +1,8 @@
 from matplotlib import pyplot as plt
 from numpy import argmax
 import numpy as np
+from PIL import Image
+import glob
 def showImage(image_data):
     plt.imshow(image_data)
     plt.show()
@@ -26,7 +28,7 @@ def print_clothing_article_class(index):
 def print_image_class(index):
     Classes = ["Bird", " Plane", "Orange"]
     print("The image contains a " + Classes[index])
-    
+
 def show_images(images, cols = 1, titles = None):
     """Display a list of images in a single figure with matplotlib.
 
@@ -52,3 +54,13 @@ def show_images(images, cols = 1, titles = None):
         a.set_title(title)
     fig.set_size_inches(np.array(fig.get_size_inches()) * n_images)
     plt.show()
+
+
+def rgb2gray(rgb):
+    return np.dot(rgb[...,:3], [0.299, 0.587, 0.114])
+
+def load_and_preprocess_images(path):
+    locations = glob.glob(path)
+    x = np.array([np.array(Image.open(fname).resize((100,100))) for fname in locations])
+    gray_x =rgb2gray(x)
+    return gray_x
