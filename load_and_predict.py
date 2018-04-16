@@ -36,7 +36,7 @@ y = np.concatenate((bird_y, plane_y, orange_y))
 
 X_train, X_test, Y_train, Y_test = train_test_split(x, y,
                                                 test_size=0.30, random_state=42)
-utils.showImage(X_test[250])
+utils.showImage(X_test[350])
 
 X_train = X_train.reshape(X_train.shape[0], 100, 100, 1)
 X_test = X_test.reshape(X_test.shape[0], 100, 100, 1)
@@ -83,7 +83,7 @@ score = loaded_model.evaluate(X_test, Y_test, verbose=0)
 print("%s: %.2f%%" % (loaded_model.metrics_names[1], score[1] * 100))
 
 predictions = loaded_model.predict(X_test)
-result = utils.one_hot_to_categorical(predictions[250])
+result = utils.one_hot_to_categorical(predictions[350])
 print(result)
 utils.print_image_class(result)
 
